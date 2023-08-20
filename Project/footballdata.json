@@ -1,6 +1,19 @@
 [
     {
         "Vieta": "1",
+        "Komanda": "FK Medžiai",
+        "Logo": "fk-medžiai",
+        "Rungtynės": "11",
+        "Pergalės": "7",
+        "Lygiosios": "2",
+        "Pralaimėjimai": "2",
+        "Įmušta": "45",
+        "Praleista": "18",
+        "Skirtumas": "+27",
+        "Taškai": "23"
+    },
+    {
+        "Vieta": "2",
         "Komanda": "FK Granitas",
         "Logo": "fk-granitas",
         "Rungtynės": "10",
@@ -13,7 +26,7 @@
         "Taškai": "21"
     },
     {
-        "Vieta": "2",
+        "Vieta": "3",
         "Komanda": "Širvintos-VGTU-Vilkai",
         "Logo": "širvintos-vgtu-vilkai",
         "Rungtynės": "10",
@@ -24,19 +37,6 @@
         "Praleista": "13",
         "Skirtumas": "+10",
         "Taškai": "21"
-    },
-    {
-        "Vieta": "3",
-        "Komanda": "FK Medžiai",
-        "Logo": "fk-medžiai",
-        "Rungtynės": "10",
-        "Pergalės": "6",
-        "Lygiosios": "2",
-        "Pralaimėjimai": "2",
-        "Įmušta": "37",
-        "Praleista": "16",
-        "Skirtumas": "+21",
-        "Taškai": "20"
     },
     {
         "Vieta": "4",
@@ -133,13 +133,13 @@
         "Vieta": "11",
         "Komanda": "FK Geležinis Vilkas",
         "Logo": "fk-geležinis-vilkas",
-        "Rungtynės": "10",
+        "Rungtynės": "11",
         "Pergalės": "0",
         "Lygiosios": "0",
-        "Pralaimėjimai": "10",
-        "Įmušta": "13",
-        "Praleista": "56",
-        "Skirtumas": "-43",
+        "Pralaimėjimai": "11",
+        "Įmušta": "15",
+        "Praleista": "64",
+        "Skirtumas": "-49",
         "Taškai": "0"
     }
 ]

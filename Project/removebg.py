@@ -10,7 +10,7 @@ os.makedirs(output_dir, exist_ok=True)
 
 def remove_white_background():
     input_path = os.path.join(output_dir, "fk-medžiai.png")
-    output_path = os.path.join(output_dir, "fk-medžiai_output1.webp")
+    output_path = os.path.join(output_dir, "fk-medžiai_outputx.webp")
     image = cv2.imread(input_path, cv2.IMREAD_UNCHANGED)
 
     # Define the threshold for white pixels
@@ -37,10 +37,10 @@ remove_white_background()
 
 def remove_background():
     input_path = os.path.join(output_dir, "fk-medžiai.png")
-    output_path = os.path.join(output_dir, "fk-medžiai_output2.webp")
+    output_path = os.path.join(output_dir, "fk-medžiai_outputy.webp")
     input_image = Image.open(input_path)
     
     output_image = remove(input_image)
-    output_image.save(output_path, format="WebP", quality=80)
+    output_image.save(output_path, format="WebP", quality=95)
 
-remove_background()
+#remove_background()

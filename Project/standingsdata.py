@@ -1,14 +1,15 @@
-#import dotenv
-#import os
-#import requests
-#from bs4 import BeautifulSoup 
+import dotenv
+import os
+import requests
+from bs4 import BeautifulSoup 
 import json
 from dataextractor import DataExtractor
 
-class StandingsTable:
+class StandingsData:
     def __init__(self, web_url):
         self.web_url = web_url
-        self.standings_table = DataExtractor(self.web_url).get_table()
+        self.data_extractor = DataExtractor(self.web_url)
+        self.standings_table = self.data_extractor.get_table()
 
     def format_data(self):
         
@@ -50,11 +51,11 @@ class StandingsTable:
     def get_data(self):
         try: 
             headings, rows = self.format_data()
-            my_list = [] # is my_list suitable name? maybe
+            my_lst = [] # is my_list suitable name? maybe
             for row in rows: 
                 combined = dict(zip(headings, row))
-                my_list.append(combined)
-            json_data = json.dumps(my_list, ensure_ascii=False, indent=4)
+                my_lst.append(combined)
+            json_data = json.dumps(my_lst, ensure_ascii=False, indent=4)
             return json_data
         except:
             return 
@@ -68,7 +69,6 @@ class StandingsTable:
             return print('Json string cannot be serialized. Go to the link and check whether the table is there')
             
 
-my_obj = StandingsTable("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
+my_obj = StandingsData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
 
 print(my_obj.get_data())
-#my_obj.save_data()
