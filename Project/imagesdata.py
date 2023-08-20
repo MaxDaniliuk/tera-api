@@ -111,7 +111,11 @@ my_obj.save_image()
 #my_obj.empty_image_folder()
 
 
-
+#If you want to save images to csv file, image_urls is a list of image_urls (or any other urls). 
+"""
+def save_urls_to_csv(image_urls):
+   df = pd.DataFrame({"links": image_urls})
+   df.to_csv("links.csv", index=False, encoding="utf-8")"""
 
 
 
