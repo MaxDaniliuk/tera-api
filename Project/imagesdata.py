@@ -33,6 +33,7 @@ class ImagesData:
                         print(f"URL check for '{team_name}': Failed to reach URL")
                         pass  
         return teams_urls
+    
 
     def get_team_images_urls(self):
         images_urls_dict = {}
@@ -51,6 +52,7 @@ class ImagesData:
                 else:
                     print(f"No image URL found on {team_name} website") 
         return images_urls_dict   
+    
             
     def save_image(self):
         for team_name, team_logo_url in self.images_urls_dict.items():
@@ -69,7 +71,7 @@ class ImagesData:
             else: 
                 white_background = image
 
-            file_path = Path(self.output_dir, team_name + ".png")
+            file_path = Path(self.output_dir, team_name + ".png") #hashlib.sha1(image_content).hexdigest()[:10] + ".png") - replace team_name to save image by its hash; import hashlib
             white_background.save(file_path, "PNG", quality=95)
 
             input_path = file_path  # Use the path of the saved white-background image
@@ -89,13 +91,6 @@ class ImagesData:
             except Exception as e:
                 print(f"Error deleting {input_path}: {e}")
 
-
-        """for png_path in images_to_delete:
-            try:
-                os.remove(png_path)
-                print(f"Deleted: {png_path}")
-            except Exception as e:
-                print(f"Error deleting {png_path}: {e}")"""
      
     def empty_image_folder(self):
         #files_names = list(self.images_urls_dict.values())
