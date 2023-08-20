@@ -71,4 +71,4 @@ class StandingsData:
 
 my_obj = StandingsData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
 
-print(my_obj.get_data())
+my_obj.save_data()

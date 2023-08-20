@@ -1,11 +1,8 @@
-import dotenv
-import os
 import requests
 from bs4 import BeautifulSoup 
 
 
-dotenv.load_dotenv()
-FOOTBALL_WEBSITE_URL= os.environ.get("FOOTBALL_WEBSITE_URL")
+
 
 class DataExtractor:
     def __init__(self, web_url):

@@ -54,31 +54,49 @@ class ImagesData:
             
     def save_image(self):
         for team_name, team_logo_url in self.images_urls_dict.items():
-            
+            team_name = team_name.strip().lower().replace(' ', '-') 
             image_content = requests.get(team_logo_url).content
             image_file = io.BytesIO(image_content)
             image = Image.open(image_file)
 
-            if image.mode == "RGBA":
-                white_background = Image.new("RGB", image.size, (255, 255, 255))
-                white_background.paste(image, mask=image.split()[3])
+            if team_name != 'fc-vova':
+                if image.mode == "RGBA":
+                
+                    white_background = Image.new("RGB", image.size, (255, 255, 255))
+                    white_background.paste(image, mask=image.split()[3])
+                else: 
+                    white_background = image
             else: 
                 white_background = image
 
-            file_path = Path(self.output_dir, team_name.strip().lower().replace(' ', '-') + ".png")
-            white_background.save(file_path, "PNG", quality=80)
+            file_path = Path(self.output_dir, team_name + ".png")
+            white_background.save(file_path, "PNG", quality=95)
 
             input_path = file_path  # Use the path of the saved white-background image
             output_path = file_path.with_suffix(".webp")  # Change the extension to .webp
             input_image = Image.open(input_path)
             
-            #if input_image.mode == "RGB":
-            output_image = remove(input_image)
-                
-            #if input_image.mode == "RGB":
-                
-            output_image.save(output_path, format="PNG", quality=95)
-                    
+            if team_name != 'fk-medžiai':
+                output_image = remove(input_image)
+            else:
+                output_image = input_image
+            output_image.save(output_path, format="WebP", quality=95)
+
+            # Delete the corresponding PNG image after WebP image is saved
+            try:
+                os.remove(input_path)
+                print(f"Deleted: {input_path}")
+            except Exception as e:
+                print(f"Error deleting {input_path}: {e}")
+
+
+        """for png_path in images_to_delete:
+            try:
+                os.remove(png_path)
+                print(f"Deleted: {png_path}")
+            except Exception as e:
+                print(f"Error deleting {png_path}: {e}")"""
+     
     def empty_image_folder(self):
         #files_names = list(self.images_urls_dict.values())
         folder_path = os.path.join(self.output_dir)
@@ -97,7 +115,6 @@ my_obj = ImagesData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
 my_obj.save_image()
 #my_obj.empty_image_folder()
 
-###############################
 
 
 
