@@ -12,9 +12,8 @@ class ImagesData:
     output_dir = "logo_images"
     os.makedirs(output_dir, exist_ok=True)
     
-    def __init__(self, web_url):
-        self.web_url = web_url
-        self.standings_table = DataExtractor(self.web_url).get_table()
+    def __init__(self, standings_table):
+        self.standings_table = standings_table
         self.images_urls_dict = self.get_team_images_urls()
         
     
@@ -54,7 +53,7 @@ class ImagesData:
         return images_urls_dict   
     
             
-    def save_image(self):
+    def save_images(self):
         for team_name, team_logo_url in self.images_urls_dict.items():
             team_name = team_name.strip().lower().replace(' ', '-') 
             image_content = requests.get(team_logo_url).content
@@ -87,7 +86,7 @@ class ImagesData:
             # Delete the corresponding PNG image after WebP image is saved
             try:
                 os.remove(input_path)
-                print(f"Deleted: {input_path}")
+                print(f"Replacing {input_path} with .webp format")
             except Exception as e:
                 print(f"Error deleting {input_path}: {e}")
 
@@ -105,9 +104,9 @@ class ImagesData:
             except Exception as e:
                 print(f"Error deleting {file_name}: {e}")
 
-my_obj = ImagesData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
+#my_obj = ImagesData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
 
-my_obj.save_image()
+#my_obj.save_image()
 #my_obj.empty_image_folder()
 
 

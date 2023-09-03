@@ -6,10 +6,11 @@ import json
 from dataextractor import DataExtractor
 
 class StandingsData:
-    def __init__(self, web_url):
-        self.web_url = web_url
-        self.data_extractor = DataExtractor(self.web_url)
-        self.standings_table = self.data_extractor.get_table()
+    def __init__(self, standings_table):
+        #self.data_extractor = DataExtractor()
+        #self.standings_table = self.data_extractor.get_table()
+        self.standings_table = standings_table
+
 
     def format_data(self):
         
@@ -27,10 +28,14 @@ class StandingsData:
         # if standings_table is None: 
         #     return      
         # also standings_table says more about content than target_table, you can use words describing content more if it is helpful
+        #standings_table = DataExtractor.get_table()
 
+        #standings_table = self.data_extractor.get_table()
         headings = []
         rows = []
         for th_elements in self.standings_table.find_all('th'):
+        #for th_elements in standings_table.find_all('th'):
+        
             headings.append(th_elements.text)
         for tr_blocks in self.standings_table.find_all('tr')[1:]:
             seperated_rows = []
@@ -51,12 +56,13 @@ class StandingsData:
     def get_data(self):
         try: 
             headings, rows = self.format_data()
-            my_lst = [] # is my_list suitable name? maybe
+            standings = [] 
             for row in rows: 
                 combined = dict(zip(headings, row))
-                my_lst.append(combined)
-            json_data = json.dumps(my_lst, ensure_ascii=False, indent=4)
-            return json_data
+                standings.append(combined)
+            
+            #json_data = json.dumps(my_lst, ensure_ascii=False, indent=4)
+            return standings
         except:
             return 
 
@@ -69,6 +75,6 @@ class StandingsData:
             return print('Json string cannot be serialized. Go to the link and check whether the table is there')
             
 
-my_obj = StandingsData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
+#my_obj = StandingsData("http://www.vilniausfutbolas.lt/lyga/III-Lyga/20")
 
-my_obj.save_data()
+#my_obj.save_data()
