@@ -17,11 +17,11 @@ def main():
     #print(standings_data.get_data())
     data = {'standings': standings_data.get_data()}
     #print(data)
-    
+
     #images_data = ImagesData(standings_table)
     #images_data.save_images()
 
-    response = requests.post('http://127.0.0.1:8000/data', json=data)
+    response = requests.post('http://127.0.0.1:8000', json=data)
     if response.status_code == 201:
         print('Data successfully posted to the API.')
     else:
