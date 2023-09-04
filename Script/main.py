@@ -16,6 +16,7 @@ def main():
     standings_data = StandingsData(standings_table)
     #print(standings_data.get_data())
     data = {'standings': standings_data.get_data()}
+    #print(data)
     
     #images_data = ImagesData(standings_table)
     #images_data.save_images()
