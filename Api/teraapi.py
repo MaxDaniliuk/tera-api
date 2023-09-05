@@ -49,12 +49,15 @@ def create_standings_table():
             "column7 VARCHAR(2)",
             "column8 VARCHAR(3)",
             "column9 VARCHAR(3)",
-            "column10 VARCHAR(3)",
-            "column11 VARCHAR(2)"
+            "column10 VARCHAR(4)",
+            "column11 VARCHAR(3)"
             ]
 
             create_table_sql = f"CREATE TABLE {table_name} ({', '.join(column_definitions)})"
             cursor.execute(create_table_sql)
+            print(f"Table {table_name} is Created in the Database")
+        else:
+            print(f"Table {table_name} already exists")
 
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
@@ -90,14 +93,13 @@ async def process_posted_data(data: CustomData):
         connection = create_db_connection()
         cursor = connection.cursor()
 
-        ###
-        connection.commit()
-        ###
 
-        for dict_elements in structred_data['standings']:
-            for column_name, row_data in dict_elements.items():
-                #Working on data insertion
-                pass
+        for dict_of_data in structred_data['standings']:
+            
+            insert_query = "INSERT INTO Standings_table (Vieta, Komanda, Logo, Rungtynės, Pergalės, Lygiosios, Pralaimėjimai, Įmušta, Praleista, Skirtumas, Taškai) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            row_values = tuple(dict_of_data.values())
+            cursor.execute(insert_query, row_values)
+                
 
         connection.commit()
 
