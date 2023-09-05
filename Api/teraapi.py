@@ -19,13 +19,13 @@ def create_db_connection():
     db= os.getenv("DB_NAME"),
     autocommit = True,
     ssl_verify_identity = True,  # Enable SSL identity verification
-    ssl_ca = "/etc/ssl/cert.pem"
+    ssl_ca = "/etc/ssl/cert.pem",
+    charset='utf8mb4',  # Set the character set to utf8mb4
+    collation='utf8mb4_unicode_ci'
     )
     return connection
 
 
-class CustomData(BaseModel):
-    standings: list[dict[str, Any]]
 
 
 def create_standings_table():
@@ -34,6 +34,8 @@ def create_standings_table():
         cursor = connection.cursor()
 
         table_name = "Standings_table"
+
+        
 
         # Check if the table exists, and create it if it doesn't
         if not table_exists(cursor, table_name):
@@ -66,7 +68,7 @@ def create_standings_table():
         connection.close()
 
 
-# Check if the table exists in the database
+#Check if the table exists in the database
 def table_exists(cursor, table_name):
     try:
         cursor.execute("SHOW TABLES LIKE %s", (table_name,))
@@ -75,6 +77,9 @@ def table_exists(cursor, table_name):
         # Handle any exceptions related to database access
         print(f"Error checking table existence: {str(e)}")
         return False
+    
+class CustomData(BaseModel):
+    standings: list[dict[str, Any]]
 
 
 #Change to get data from the DB
@@ -85,7 +90,7 @@ async def root():
 @app.post("/", status_code=201)
 async def process_posted_data(data: CustomData):
     structred_data = data.standings
-
+ 
     try:
         #Create the table if it doesn't exist
         create_standings_table()
@@ -93,14 +98,15 @@ async def process_posted_data(data: CustomData):
         connection = create_db_connection()
         cursor = connection.cursor()
 
-
-        for dict_of_data in structred_data['standings']:
+        row_count = 0
+        for dict_of_data in structred_data:
             
             insert_query = "INSERT INTO Standings_table (Vieta, Komanda, Logo, Rungtynės, Pergalės, Lygiosios, Pralaimėjimai, Įmušta, Praleista, Skirtumas, Taškai) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
             row_values = tuple(dict_of_data.values())
             cursor.execute(insert_query, row_values)
-                
-
+            row_count += 1
+            print(f"row {row_count} has been added")
+            
         connection.commit()
 
         return {"message": "Data has been inserted successfully"}
