@@ -18,8 +18,8 @@ def create_db_connection():
         passwd=os.getenv("DB_PASSWORD"),
         db=os.getenv("DB_NAME"),
         autocommit=True,
-        charset='utf8mb4',  # Explicitly set the character set
-        collation='utf8mb4_unicode_ci',  # Explicitly set the collation
+        charset='utf8mb4',  
+        collation='utf8mb4_unicode_ci',  
         ssl_verify_identity=True,
         ssl_ca="/etc/ssl/cert.pem"
     )
@@ -27,24 +27,24 @@ def create_db_connection():
 
 
 def create_standings_table():
-    try:
-        connection = create_db_connection()
-        cursor = connection.cursor()
+    connection = create_db_connection()
+    cursor = connection.cursor()
 
-        table_name = "Standings_table"
+    try:
+        table_name = "StandingsTable"
         column_definitions = [
             "id INT AUTO_INCREMENT PRIMARY KEY",
-            "column1 VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column2 VARCHAR(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column3 VARCHAR(25) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column4 VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column5 VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column6 VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column7 VARCHAR(2) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column8 VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column9 VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column10 VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "column11 VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+            "Vieta VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Komanda VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Logo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Rungtynes VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Pergales VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Lygiosios VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Pralaimejimai VARCHAR(3) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Imusta VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Praleista VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Skirtumas VARCHAR(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
+            "Taskai VARCHAR(4) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
             ]
         
 
@@ -83,10 +83,10 @@ class CustomData(BaseModel):
 async def root():
     return {"message": "Working"}
 
-@app.post("/", status_code=201)
+@app.put("/", status_code=201)
 async def process_posted_data(data: CustomData):
     structred_data = data.standings
- 
+    
     try:
         #Create the table if it doesn't exist
         create_standings_table()
@@ -95,21 +95,29 @@ async def process_posted_data(data: CustomData):
         cursor = connection.cursor()
 
         row_count = 0
-        for dict_of_data in structred_data:
-            
-            insert_query = "INSERT INTO Standings_table (Vieta, Komanda, Logo, Rungtynės, Pergalės, Lygiosios, Pralaimėjimai, Įmušta, Praleista, Skirtumas, Taškai) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
-            row_values = tuple(value.encode("utf-8") if isinstance(value, str) else value for value in dict_of_data.values())
+
+        #Code block for insertin 
+        '''for dict_of_data in structred_data:
+            insert_query = "INSERT INTO StandingsTable (Vieta, Komanda, Logo, Rungtynes, Pergales, Lygiosios, Pralaimejimai, Imusta, Praleista, Skirtumas, Taskai) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+            row_values = tuple( dict_of_data.values())
             cursor.execute(insert_query, row_values)
             row_count += 1
-            print(f"row {row_count} has been added")
-            
+            print(f"row {row_count} has been added")'''
+        
+        update_query = """
+            UPDATE StandingsTable
+            SET Vieta = %s, Komanda = %s, Logo = %s, Rungtynes = %s, Pergales = %s,
+                Lygiosios = %s, Pralaimejimai = %s, Imusta = %s, Praleista = %s,
+                Skirtumas = %s, Taskai = %s
+        """
+        for dict_of_data in structred_data:
+            row_values = tuple(dict_of_data.values())
+            cursor.execute(update_query, row_values)
+            row_count += 1
+            print(f"row {row_count} has been updated")
+
         connection.commit()
-
-        #################
-        #ERROR: {'detail': "1105 (HY000): syntax error at position 60 near 'Ä'"}
-
-        ################# # Will try to encode utf-8 for every string containing non-ascii char
-
+        
         return {"message": "Data has been inserted successfully"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

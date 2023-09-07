@@ -1,13 +1,12 @@
 from imagesdata import ImagesData
 from dataextractor import DataExtractor
 from standingsdata import StandingsData
-import os
-import dotenv
 import requests
+import json
 
 
-dotenv.load_dotenv()
-FOOTBALL_WEBSITE_URL= os.environ.get("FOOTBALL_WEBSITE_URL")
+#dotenv.load_dotenv()
+#FOOTBALL_WEBSITE_URL= os.environ.get("FOOTBALL_WEBSITE_URL")
 
 def main(): 
     extracted_table = DataExtractor('http://www.vilniausfutbolas.lt/lyga/III-Lyga/20')
@@ -17,17 +16,16 @@ def main():
     #print(standings_data.get_data())
     data = {'standings': standings_data.get_data()}
     
-    #print(data['standings'])
-    
 
     #images_data = ImagesData(standings_table)
     #images_data.save_images()
 
-    response = requests.post('http://127.0.0.1:8000', json=data)
+    response = requests.put('http://127.0.0.1:8000', json=data)
     if response.status_code == 201:
         print('Data successfully posted to the API.')
     else:
         print('Failed to post data:', response.status_code)
+        #print(response.content)
         print(response.json())
 
 
