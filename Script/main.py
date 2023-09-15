@@ -14,18 +14,21 @@ def main():
 
     standings_data = StandingsData(standings_table)
     #print(standings_data.get_data())
+
     data = {'standings': standings_data.get_data()}
     
 
     #images_data = ImagesData(standings_table)
     #images_data.save_images()
 
-    response = requests.put('http://127.0.0.1:8000', json=data)
+    #Move to posting data to the api. 
+
+    response = requests.post('http://127.0.0.1:8000/db/operations', json=data)
     if response.status_code == 201:
         print('Data successfully posted to the API.')
     else:
         print('Failed to post data:', response.status_code)
-        #print(response.content)
+        print(response.content)
         print(response.json())
 
 
