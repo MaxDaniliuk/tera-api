@@ -1,15 +1,15 @@
 STANDINGS_SCHEMA = [
-            "Vieta int",
-            "Komanda VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY",
+            "Place int",
+            "Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY",
             "Logo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "Rungtynes int",
-            "Pergales int",
-            "Lygiosios int",
-            "Pralaimejimai int",
-            "Imusta int",
-            "Praleista int",
-            "Skirtumas VARCHAR(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
-            "Taskai int"
+            "GamesPlayed int",
+            "Won int",
+            "Drawn int",
+            "Lost int",
+            "GoalsFor int",
+            "GoalsAgainst int",
+            "GaolDifference VARCHAR(5)",
+            "Points int"
             ]
 
 
@@ -29,15 +29,15 @@ TEAM_SCHEMA =[
 
 #Create table query
 '''CREATE TABLE ThirdLeagueStandings (
-            Vieta int,
-            Komanda VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY,
+            Place int,
+            Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY,
             Logo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-            Rungtynes int,
-            Pergales int,
-            Lygiosios int,
-            Pralaimejimai int,
-            Imusta int,
-            Praleista int,
-            Skirtumas VARCHAR(5) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-            Taskai int
+            GamesPlayed int,
+            Won int,
+            Drawn int,
+            Lost int,
+            GoalsFor int,
+            GoalsAgainst int,
+            GoalDifference VARCHAR(5),
+            Points int
             );'''

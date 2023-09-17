@@ -23,7 +23,7 @@ def main():
 
     #Move to posting data to the api. 
 
-    response = requests.post('http://127.0.0.1:8000/db/operations', json=data)
+    response = requests.post('http://127.0.0.1:8000/db/insert/data', json=data)
     if response.status_code == 201:
         print('Data successfully posted to the API.')
     else:
