@@ -6,3 +6,6 @@ Script/__pycache__/standingsdata.cpython-311.pyc
 Script/__pycache__/try.cpython-311.pyc
 Script/__pycache__/teraapi.cpython-311.pyc
 Api/__pycache__/teraapi.cpython-311.pyc
+Api/Models/__pycache__/models.cpython-311.pyc
+Api/__pycache__/main.cpython-311.pyc
+Api/Queries/__pycache__/sql_queries.cpython-311.pyc
