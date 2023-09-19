@@ -2,7 +2,6 @@ import os
 from rembg import remove
 from PIL import Image
 import requests
-from dataextractor import DataExtractor
 from bs4 import BeautifulSoup
 import io
 from pathlib import Path

@@ -1,32 +1,70 @@
 from fastapi import FastAPI, HTTPException
 from Queries.sql_queries import StandingsSQLQueries
+from Queries.sql_queries import TeraTeamSQLQueries
 from db import TeraDBManager
-from Models.models import CustomData
+from Models.models import StandingsData, TeamData, DBProcessor
 
 
 app = FastAPI()
 
+db_processor = DBProcessor()
 
 @app.get("/test")
 async def root():
     return {"message": "Get's working"}
 
-@app.post("/db/insert/data", status_code=201)
-async def process_posted_data(data: CustomData):
+#ROUTES... 
+
+@app.post("/db/standingsdata", status_code=201)
+async def process_posted_data(data: StandingsData):
     structred_data = data.standings
-    db_manager = TeraDBManager()
-    db_conection = db_manager.create_db_connection()
-    cursor = db_conection.cursor()
     insert_query = StandingsSQLQueries.INSERT_STANDINGS_DATA
 
-    try:
+    db_processor.process_data(
+        structred_data, 
+        db_processor.db_connection_manager.post_data, 
+        insert_query, 
+        "ThirdLeagueStandings"
+        )
     
-        db_manager.execute_third_league_standings_query(cursor,insert_query, structred_data)
-        db_conection.commit()
-        print("Data successfully posted to the DB")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-    finally:
-        cursor.close()
-        db_conection.close()
+
+@app.put("/db/standingsdata", status_code=201)
+async def process_posted_data(data: StandingsData):
+    structred_data = data.standings
+    update_query = StandingsSQLQueries.UPDATE_STANDINGS_DATA
+    
+    db_processor.process_data(
+        structred_data, 
+        db_processor.db_connection_manager.update_data, 
+        update_query,
+        "ThirdLeagueStandings" 
+        )
+
+
+@app.post("/db/teamdata", status_code=201)
+async def process_posted_data(data: TeamData):
+    structred_data = data.team
+    insert_query = TeraTeamSQLQueries.INSERT_TEAM_DATA
+
+    db_processor.process_data(
+        structred_data, 
+        db_processor.db_connection_manager.post_data, 
+        insert_query, 
+        "TeraPlayers"
+    )
+
+
+@app.put("/db/teamdata", status_code=201)
+async def process_posted_data(data: TeamData):
+    structred_data = data.team
+    update_query = TeraTeamSQLQueries.UPDATE_TEAM_DATA
+
+    db_processor.process_data(
+        structred_data, 
+        db_processor.db_connection_manager.update_data, 
+        update_query,
+        "TeraPlayers" 
+        )
+
+
         

@@ -3,7 +3,6 @@ import os
 import requests
 from bs4 import BeautifulSoup 
 import json
-from dataextractor import DataExtractor
 
 class StandingsData:
     def __init__(self, standings_table):

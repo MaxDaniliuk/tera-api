@@ -2,8 +2,6 @@ import requests
 from bs4 import BeautifulSoup 
 
 
-
-
 class DataExtractor:
     def __init__(self, web_url):
         self.web_url = web_url

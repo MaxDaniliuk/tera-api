@@ -13,18 +13,30 @@ STANDINGS_SCHEMA = [
             ]
 
 
-TEAM_SCHEMA =[
-    "Komanda VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY",
-    "Logo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+TERAPLAYERS_SCHEMA =[
+    "PlayerID INT AUTO_INCREMENT PRIMARY KEY"
+    "FullName VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", 
+    "DateOfBirth VARCHAR(30)", 
+    "Position VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", 
+    "Goals INT", 
+    "Assists INT", 
+    "GC INT", 
+    "RC INT"
 ]
 
 
-'''CREATE TABLE players (
-    PlayerID INT AUTO_INCREMENT PRIMARY KEY,
-    PlayerName VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-    TeamKomanda VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
-    FOREIGN KEY (TeamKomanda) REFERENCES team(Komanda)
-);'''
+'''
+CREATE TABLE TeraPlayers (
+    PlayerID UUID PRIMARY KEY DEFAULT UUID(),
+    FullName VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+    DateOfBirth VARCHAR(30), 
+    Position VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+    Goals INT, 
+    Assists INT, 
+    GC INT, 
+    RC INT
+);
+'''
 
 
 #Create table query
