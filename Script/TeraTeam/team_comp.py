@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 
-class TeraPlayers:
+class TeraTeam:
     
     def __init__(self, web_url):
         self.web_url = web_url
@@ -27,12 +27,12 @@ class TeraPlayers:
         target_table = soup.find('table', class_='standings full-width all-matches')
         
         if target_table:
-            headings = []
+            headings = ['FullName', 'DateOfBirth', 'Position', 'Goals', 'Assists', 'GC', 'RK']
             rows = []
             
-            for th_element in target_table.find_all('th')[1:]:
+            '''for th_element in target_table.find_all('th')[1:]:
                 # Do something with each <tr> element here.
-                headings.append(th_element.text)
+                headings.append(th_element.text)'''
             
             for tr_block in target_table.find_all('tr')[1:]:
                 individual_row = []
@@ -53,7 +53,7 @@ class TeraPlayers:
             return team_data
 
     #Gets link to a match    
-    def get_match_link(self):
+    '''def get_match_link(self):
         soup = self.target_block
         #target_div = soup.find('div', id='rungtynes')
         target_table = soup.find('table', class_='standings all-matches')
@@ -107,11 +107,11 @@ class TeraPlayers:
             
             #json_data = json.dumps(my_lst, ensure_ascii=False, indent=4)
             return match_data
-    
+    '''
     def get_match_results(self, data_list):
         pass
 
         
-obj = TeraPlayers('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
+#obj = TeraTeam('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
 
 #print(obj.get_players_data())

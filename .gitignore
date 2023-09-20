@@ -17,3 +17,4 @@ Script/ThirdLeagueStandings/__pycache__/imagesdata.cpython-311.pyc
 Script/ThirdLeagueStandings/__pycache__/standingsdata.cpython-311.pyc
 Api/Queries/__pycache__/sql_queries.cpython-311.pyc
 Api/__pycache__/db.cpython-311.pyc
+Api/Schema/__pycache__/schema.cpython-311.pyc

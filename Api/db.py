@@ -2,6 +2,8 @@ from dotenv import load_dotenv
 load_dotenv()
 import os
 from mysql.connector import connect, Error
+from fastapi import HTTPException
+import uuid
 
 
 class TeraDBManager:
@@ -28,46 +30,80 @@ class TeraDBManager:
 
 #This file contains code to connect to the DB and maybe some other related stuff. 
     def post_data(self, cursor, insert_query, data, table_name):
+        if table_name == 'TeraPlayers':
+            #players_ids = []
+            players_name_id = {}
+
         cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
         table_row_count = cursor.fetchone()[0]
+
         if table_row_count > 0:
             print(f"Data has already been inserted into the {table_name} table")
             return
         else:
-            row_counter = 0
-            for dict_row in data:
-                 
-                row_counter += 1
-                row_values = tuple(dict_row.values())
+            row_counter = 1
+            for rows in data:
+
+                if table_name == 'TeraPlayers':
+                    player_id = str(uuid.uuid4())
+                    row_values = (player_id, *tuple(rows.values()), "FK Tera")
+                    players_name_id[rows['FullName']] = player_id
+
+                else:   
+                    row_values = tuple(rows.values())
+
                 cursor.execute(insert_query, row_values)
                 print(f"Row {row_counter} has been inserted into {table_name}")
-                
+                row_counter += 1
+            if table_name == 'TeraPlayers':
+                #players_ids.append(player_name_id) 
+                return players_name_id
+            else:
+                return
         
 
     
-    def update_data(self, cursor, query, data, table_name):
-        
-        if table_name == 'TeraPlayers':
-            player_id = 1
-
+    def update_data(self, cursor, query, data, table_name, id=None):
+        if id is None:
+            pass
         row_counter = 0
-        for dict_row in data: 
+        for rows in data: 
             row_counter += 1
-            row_values = tuple(dict_row.values())
+            row_values = tuple(rows.values())
             if not query.startswith("UPDATE"):
                 print('Wrong SQL query')
                 return
             if table_name == 'TeraPlayers':
+                player_id = id[rows['FullName']]
                 params = (*row_values, player_id)
-                player_id += 1
+                
             if table_name == 'ThirdLeagueStandings':
-                id_column = dict_row['Komanda']
+                id_column = rows['Komanda']
                 params = (*row_values, id_column)
-
             cursor.execute(query, params)
             print(f"Row {row_counter} has been updated")
     
 
-    
-            
+
+class DBProcessor:
+
+    def __init__(self):
+        self.db_connection_manager = TeraDBManager()
+
+    def process_data(self, data, query_function, query, table_name, id=None):
+        db_connection = self.db_connection_manager.create_db_connection()
+        cursor = db_connection.cursor()
+
+        try:
+            if id is None:
+                output = query_function(cursor, query, data, table_name)
+            else:
+                output = query_function(cursor, query, data, table_name, id)
+            db_connection.commit()
+            return output
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            cursor.close()
+            db_connection.close()
             

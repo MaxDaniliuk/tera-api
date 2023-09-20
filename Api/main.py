@@ -1,8 +1,9 @@
-from fastapi import FastAPI, HTTPException
-from Queries.sql_queries import StandingsSQLQueries
-from Queries.sql_queries import TeraTeamSQLQueries
-from db import TeraDBManager
-from Models.models import StandingsData, TeamData, DBProcessor
+from fastapi import FastAPI
+from Queries.sql_queries import StandingsSQLQueries, TeraTeamSQLQueries
+from Schema.schema import PLAYERS_IDS
+from db import DBProcessor
+from Models.models import ThirdLeagueStandings, TeraPlayers
+
 
 
 app = FastAPI()
@@ -15,8 +16,8 @@ async def root():
 
 #ROUTES... 
 
-@app.post("/db/standingsdata", status_code=201)
-async def process_posted_data(data: StandingsData):
+@app.post("/db/thirdleaguestandings", status_code=201)
+async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
     insert_query = StandingsSQLQueries.INSERT_STANDINGS_DATA
 
@@ -28,8 +29,8 @@ async def process_posted_data(data: StandingsData):
         )
     
 
-@app.put("/db/standingsdata", status_code=201)
-async def process_posted_data(data: StandingsData):
+@app.put("/db/thirdleaguestandings", status_code=201)
+async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
     update_query = StandingsSQLQueries.UPDATE_STANDINGS_DATA
     
@@ -41,30 +42,44 @@ async def process_posted_data(data: StandingsData):
         )
 
 
-@app.post("/db/teamdata", status_code=201)
-async def process_posted_data(data: TeamData):
-    structred_data = data.team
-    insert_query = TeraTeamSQLQueries.INSERT_TEAM_DATA
+
+
+@app.put("/db/put/teraplayers", status_code=201)
+async def update_players(players_data: TeraPlayers):
+    players_stats = players_data.players_data
+    update_query = TeraTeamSQLQueries.UPDATE_PLAYERS_DATA
+    player_id = PLAYERS_IDS
 
     db_processor.process_data(
-        structred_data, 
+        players_stats, 
+        db_processor.db_connection_manager.update_data, 
+        update_query,
+        "TeraPlayers",
+        player_id 
+        )
+
+@app.post("/db/post/teraplayers", status_code=201)
+async def process_players(players_data: TeraPlayers):
+    players_stats = players_data.players_data
+    insert_query =  TeraTeamSQLQueries.INSERT_PLAYERS_DATA
+
+    operation_output = db_processor.process_data(
+        players_stats, 
         db_processor.db_connection_manager.post_data, 
         insert_query, 
         "TeraPlayers"
-    )
-
-
-@app.put("/db/teamdata", status_code=201)
-async def process_posted_data(data: TeamData):
-    structred_data = data.team
-    update_query = TeraTeamSQLQueries.UPDATE_TEAM_DATA
-
-    db_processor.process_data(
-        structred_data, 
-        db_processor.db_connection_manager.update_data, 
-        update_query,
-        "TeraPlayers" 
         )
+    
+    if operation_output is not None and isinstance(operation_output, dict):
+    
+        players_ids = operation_output
 
+        return {"Message": "Table TeraPlayers filled successfully", "PlayersIds": players_ids}
+    else: 
+        players_ids = None
+        return 
+
+    
+    
 
         
