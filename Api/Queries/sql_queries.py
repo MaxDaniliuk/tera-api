@@ -4,8 +4,9 @@ class StandingsSQLQueries:
 
     CREATE_THIRD_LEAGUE_STANDINGS = '''
         CREATE TABLE ThirdLeagueStandings (
+            TeamId CHAR(8) NOT NULL,
             Place int,
-            Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY,
+            Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
             Logo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci,
             GamesPlayed int,
             Won int,
@@ -14,7 +15,8 @@ class StandingsSQLQueries:
             GoalsFor int,
             GoalsAgainst int,
             GoalDifference VARCHAR(5),
-            Points int
+            Points int,
+            PRIMARY KEY (TeamId)
             );
         '''
 

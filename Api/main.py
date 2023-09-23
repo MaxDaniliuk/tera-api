@@ -21,12 +21,21 @@ async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
     insert_query = StandingsSQLQueries.INSERT_STANDINGS_DATA
 
-    db_processor.process_data(
+    operation_output = db_processor.process_data(
         structred_data, 
         db_processor.db_connection_manager.post_data, 
         insert_query, 
         "ThirdLeagueStandings"
         )
+    
+    if operation_output is not None and isinstance(operation_output, dict):
+    
+        teams_ids = operation_output
+
+        return {"Message": "Table ThirdLeagueStandings filled successfully", "TeamsIds": teams_ids}
+    else: 
+        teams_ids = None
+        return 
     
 
 @app.put("/db/thirdleaguestandings", status_code=201)

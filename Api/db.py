@@ -30,9 +30,7 @@ class TeraDBManager:
 
 #This file contains code to connect to the DB and maybe some other related stuff. 
     def post_data(self, cursor, insert_query, data, table_name):
-        if table_name == 'TeraPlayers':
-            #players_ids = []
-            players_name_id = {}
+        names_ids = {}
 
         cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
         table_row_count = cursor.fetchone()[0]
@@ -47,19 +45,17 @@ class TeraDBManager:
                 if table_name == 'TeraPlayers':
                     player_id = str(uuid.uuid4())
                     row_values = (player_id, *tuple(rows.values()), "FK Tera")
-                    players_name_id[rows['FullName']] = player_id
+                    names_ids[rows['FullName']] = player_id
 
-                else:   
-                    row_values = tuple(rows.values())
+                if table_name == 'ThirdLeagueStandings':
+                    team_id = str(uuid.uuid4())[:8]   
+                    row_values = (team_id ,*tuple(rows.values()))
+                    names_ids[rows['Komanda']] = team_id
 
                 cursor.execute(insert_query, row_values)
                 print(f"Row {row_counter} has been inserted into {table_name}")
                 row_counter += 1
-            if table_name == 'TeraPlayers':
-                #players_ids.append(player_name_id) 
-                return players_name_id
-            else:
-                return
+            return names_ids
         
 
     

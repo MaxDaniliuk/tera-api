@@ -10,11 +10,13 @@ Api/Models/__pycache__/models.cpython-311.pyc
 Api/__pycache__/main.cpython-311.pyc
 Api/Queries/__pycache__/sql_queries.cpython-311.pyc
 Api/Models/__pycache__/models.cpython-311.pyc
-Script/TeraTeam/__pycache__/team_comp.cpython-311.pyc
-Script/TeraTeam/__pycache__/team_composition.cpython-311.pyc
 Script/ThirdLeagueStandings/__pycache__/dataextractor.cpython-311.pyc
 Script/ThirdLeagueStandings/__pycache__/imagesdata.cpython-311.pyc
 Script/ThirdLeagueStandings/__pycache__/standingsdata.cpython-311.pyc
 Api/Queries/__pycache__/sql_queries.cpython-311.pyc
 Api/__pycache__/db.cpython-311.pyc
 Api/Schema/__pycache__/schema.cpython-311.pyc
+Api/Schema/__pycache__/schema.cpython-311.pyc
+Script/TeraData/__pycache__/match_details.cpython-311.pyc
+Script/TeraData/__pycache__/tera_team.cpython-311.pyc
+

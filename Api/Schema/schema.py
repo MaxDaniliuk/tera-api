@@ -12,6 +12,8 @@ THIRDLEAGUESTANDINGS_SCHEMA = [
             "Points int"
             ]
 
+TEAM_IDS = []
+
 
 TERAPLAYERS_SCHEMA =[
     "PlayerId"
