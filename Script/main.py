@@ -3,7 +3,7 @@ from ThirdLeagueStandings.dataextractor import DataExtractor
 from ThirdLeagueStandings.standingsdata import StandingsData
 #Consider changing the dir name
 from TeraData.tera_team import TeraTeam
-from TeraData.match_processor import MatchProcessor
+#from TeraData.match_processor import MatchProcessor
 import requests
 
 
@@ -41,7 +41,7 @@ def main():
     if third_league_standings == 'put':
         response = requests.put('http://127.0.0.1:8000/db/thirdleaguestandings', json=data)
         if response.status_code == 201:
-            print('Data successfully posted to the API.')
+            print('ThirdLeagueStandings Data successfully posted to the API.')
         else:
             print('Failed to post data:', response.status_code)
             print(response.content)
@@ -49,7 +49,7 @@ def main():
 
     
 
-    '''tera_team = TeraTeam('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
+    tera_team = TeraTeam('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
     players_stats = {"players_data": tera_team.get_players_data()}
 
     tera_team = input("Do you want to post or put players' data? ")
@@ -62,7 +62,7 @@ def main():
                 message = data.get("Message")
                 players_ids = data.get("PlayersIds")
 
-                print('Team Data has been successfully sent to the API.')
+                print('Tera Team data has been successfully sent to the API.')
                 print('Message:', message)
                 print('Players IDs:', players_ids)
             
@@ -78,7 +78,7 @@ def main():
         else:
             print('Failed to post team data:', put_response.status_code)
             print(put_response.content)
-            print(put_response.json())'''
+            print(put_response.json())
 
 if __name__ == "__main__":
     main()

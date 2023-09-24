@@ -1,5 +1,7 @@
 import requests
 from bs4 import BeautifulSoup as bs
+from Schemas.schemas import IdContainer
+
 
 
 class MatchProcessor:
@@ -12,7 +14,7 @@ class MatchProcessor:
 
         if response.status_code != 200:
             print('Match URL is invalid. Request failed with status code:', response.status_code)
-            return
+            return 
         soup = bs(response.content, 'html.parser')
 
         return soup
@@ -24,8 +26,11 @@ class MatchProcessor:
         
         teams_list = match_info.find_all('h3')
         if teams_list:
-            match_details['TeamHome'] = teams_list[0].text
-            match_details['TeamAway'] = teams_list[1].text
+            match_details['TeamHome'] = IdContainer.TEAM_IDS[teams_list[0].text]
+            match_details['TeamAway'] = IdContainer.TEAM_IDS[teams_list[1].text]
+
+            #match_details['TeamHome'] = teams_list[0].text
+            #match_details['TeamAway'] = teams_list[1].text
             
         match_p_tags = match_info.find_all('p')
         if match_p_tags:
@@ -44,18 +49,14 @@ class MatchProcessor:
 
     def get_match_stats(self):
         soup = self.process_match_link()
-        div_tag = soup.find('div', attrs={"id": "statistika", "style": "display: block"})
-        
-        if div_tag:
-            pass
+        statistics_section = soup.find('div', attrs={"id": "tabwidget", "class": "top-margin tabwidget widget tab-container two"})
+        goals_section = statistics_section.find('div', class_='goals')
+        if goals_section:
+            print('e')
 
-    
-            
-
-
-        
-    
-    
+        else: 
+            print('Absent')
+        return
 
 
 
@@ -82,14 +83,14 @@ class MatchProcessor:
               'http://www.vilniausfutbolas.lt/varzybos/FK-Tera-AFK/27353', 
               'http://www.vilniausfutbolas.lt/varzybos/VJFK-Trakai-FK-Tera/27385', 
               'http://www.vilniausfutbolas.lt/varzybos/ESFA-Versme-FK-Tera/27392', 
-              'http://www.vilniausfutbolas.lt/varzybos/Navigatoriai-FK-Tera/27401']'''
+              'http://www.vilniausfutbolas.lt/varzybos/Navigatoriai-FK-Tera/27401']
 
 
-#for match_link in match_list:   
+for match_link in match_list:   
 
-    #obj = MatchProcessor(match_link)
-    #obj.get_match_details()
-    #obj.get_match_stats()
+    obj = MatchProcessor(match_link)
+    #print(obj.get_match_details())
+    obj.get_match_stats()'''
     
    
 

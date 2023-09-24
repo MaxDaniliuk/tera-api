@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
-from match_processor import MatchProcessor
-
+from TeraData.match_processor import MatchProcessor
 
 
 class TeraTeam:
@@ -32,9 +31,6 @@ class TeraTeam:
             headings = ['FullName', 'DateOfBirth', 'Position', 'Goals', 'Assists', 'GC', 'RK']
             rows = []
             
-            '''for th_element in target_table.find_all('th')[1:]:
-                # Do something with each <tr> element here.
-                headings.append(th_element.text)'''
             
             for tr_block in target_table.find_all('tr')[1:]:
                 individual_row = []
@@ -56,27 +52,32 @@ class TeraTeam:
 
        
     def get_match_data(self):
+    
         soup = self.target_block
         target_table = soup.find('table', class_='standings all-matches')
         match_details_list = []
         match_statistics_list = []
+        stadiums = []
         if target_table:
             for target_td_tag in target_table.find_all('td', class_="tc"):
                 for a_tag in target_td_tag.find_all('a', href=True): 
                     match_link = a_tag['href']
                     if match_link:
                         #Pass a link to the instances so the class could work with individual links
-                        #match_links.append(match_link)
-                        #match_data = MatchProcessor(match_link)
-                        #Invoke two methods responsible for data engineering 
-                        pass
-
                         
+                        match_data = MatchProcessor(match_link)
+                        #Invoke two methods responsible for data engineering 
+                        match_details = match_data.get_match_details()
+                        match_details_list.append(match_details)
+                        
+                        if match_details['Stadium'] not in stadiums:
+
+                            stadiums.append(match_details['Stadium'])
 
                     else:
                         raise Exception("Match link has not been found")
             
-        return 
+        return match_details_list
 
 
 
@@ -92,6 +93,6 @@ class TeraTeam:
    
 
         
-obj = TeraTeam('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
+#obj = TeraTeam('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
 
-print(obj.get_match_data())
+#print(obj.get_match_data())

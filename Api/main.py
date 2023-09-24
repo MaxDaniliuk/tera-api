@@ -1,8 +1,9 @@
 from fastapi import FastAPI
 from Queries.sql_queries import StandingsSQLQueries, TeraTeamSQLQueries
-from Schema.schema import PLAYERS_IDS
+from Schema.schema import IdContainer
 from db import DBProcessor
 from Models.models import ThirdLeagueStandings, TeraPlayers
+
 
 
 
@@ -42,12 +43,14 @@ async def process_posted_data(data: ThirdLeagueStandings):
 async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
     update_query = StandingsSQLQueries.UPDATE_STANDINGS_DATA
+    teams_ids = IdContainer.TEAM_IDS
     
     db_processor.process_data(
         structred_data, 
         db_processor.db_connection_manager.update_data, 
         update_query,
-        "ThirdLeagueStandings" 
+        "ThirdLeagueStandings",
+        teams_ids 
         )
 
 
@@ -57,7 +60,7 @@ async def process_posted_data(data: ThirdLeagueStandings):
 async def update_players(players_data: TeraPlayers):
     players_stats = players_data.players_data
     update_query = TeraTeamSQLQueries.UPDATE_PLAYERS_DATA
-    player_id = PLAYERS_IDS
+    player_id = IdContainer.PLAYERS_IDS
 
     db_processor.process_data(
         players_stats, 

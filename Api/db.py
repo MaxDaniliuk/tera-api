@@ -6,6 +6,7 @@ from fastapi import HTTPException
 import uuid
 
 
+
 class TeraDBManager:
 
     def create_db_connection(self):
@@ -59,9 +60,8 @@ class TeraDBManager:
         
 
     
-    def update_data(self, cursor, query, data, table_name, id=None):
-        if id is None:
-            pass
+    def update_data(self, cursor, query, data, table_name, unique_ids):
+        
         row_counter = 0
         for rows in data: 
             row_counter += 1
@@ -69,13 +69,14 @@ class TeraDBManager:
             if not query.startswith("UPDATE"):
                 print('Wrong SQL query')
                 return
+                
             if table_name == 'TeraPlayers':
-                player_id = id[rows['FullName']]
-                params = (*row_values, player_id)
+                id = unique_ids[rows['FullName']]
                 
             if table_name == 'ThirdLeagueStandings':
-                id_column = rows['Komanda']
-                params = (*row_values, id_column)
+                id = unique_ids[rows['Komanda']]
+                
+            params = (*row_values, id)
             cursor.execute(query, params)
             print(f"Row {row_counter} has been updated")
     

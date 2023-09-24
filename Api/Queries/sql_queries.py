@@ -20,9 +20,9 @@ class StandingsSQLQueries:
             );
         '''
 
-    INSERT_STANDINGS_DATA = "INSERT INTO ThirdLeagueStandings (Place, Team, Logo, GamesPlayed, Won, Drawn, Lost, GoalsFor, GoalsAgainst, GoalDifference, Points) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    INSERT_STANDINGS_DATA = "INSERT INTO ThirdLeagueStandings (TeamId, Place, Team, Logo, GamesPlayed, Won, Drawn, Lost, GoalsFor, GoalsAgainst, GoalDifference, Points) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-    UPDATE_STANDINGS_DATA = 'UPDATE ThirdLeagueStandings SET Place = %s, Team = %s, Logo = %s, GamesPlayed = %s, Won = %s, Drawn = %s, Lost = %s, GoalsFor = %s, GoalsAgainst = %s, GoalDifference = %s, Points = %s WHERE Team = %s'
+    UPDATE_STANDINGS_DATA = 'UPDATE ThirdLeagueStandings SET Place = %s, Team = %s, Logo = %s, GamesPlayed = %s, Won = %s, Drawn = %s, Lost = %s, GoalsFor = %s, GoalsAgainst = %s, GoalDifference = %s, Points = %s WHERE TeamId = %s'
 
     DELETE_STANDINGS_DATA = ''
 
@@ -44,7 +44,7 @@ class TeraTeamSQLQueries:
             );
         '''
 
-    INSERT_PLAYERS_DATA = "INSERT INTO TeraPlayers (PlayerID, FullName, DateOfBirth, Position, Goals, Assists, GC, RC, Team) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
+    INSERT_PLAYERS_DATA = "INSERT INTO TeraPlayers (PlayerID, FullName, DateOfBirth, Position, Goals, Assists, GC, RC, TeamId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
     
     UPDATE_PLAYERS_DATA = "UPDATE TeraPlayers SET FullName = %s, DateOfBirth = %s, Position = %s, Goals = %s, Assists = %s, GC = %s, RC = %s WHERE PlayerId = %s"
