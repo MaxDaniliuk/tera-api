@@ -1,9 +1,7 @@
 from ThirdLeagueStandings.imagesdata import ImagesData
 from ThirdLeagueStandings.dataextractor import DataExtractor
 from ThirdLeagueStandings.standingsdata import StandingsData
-#Consider changing the dir name
 from TeraData.tera_team import TeraTeam
-#from TeraData.match_processor import MatchProcessor
 import requests
 
 
