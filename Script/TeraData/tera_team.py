@@ -1,6 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 from TeraData.match_processor import MatchProcessor
+from Schemas.schemas import IdContainer
 
 
 class TeraTeam:
@@ -55,44 +56,30 @@ class TeraTeam:
     
         soup = self.target_block
         target_table = soup.find('table', class_='standings all-matches')
-        match_details_list = []
-        match_statistics_list = []
-        stadiums = []
+       
+        match_details_list = [] 
         if target_table:
             for target_td_tag in target_table.find_all('td', class_="tc"):
                 for a_tag in target_td_tag.find_all('a', href=True): 
                     match_link = a_tag['href']
                     if match_link:
-                        #Pass a link to the instances so the class could work with individual links
                         
                         match_data = MatchProcessor(match_link)
-                        #Invoke two methods responsible for data engineering 
-                        match_details = match_data.get_match_details()
-                        match_details_list.append(match_details)
+                        match_details, stadium = match_data.get_match_details()
+                        match_stats = match_data.get_match_stats()
+                        match_details['Stats'] = match_stats
                         
-                        if match_details['Stadium'] not in stadiums:
+                        if stadium in IdContainer.STADIUM_IDS.keys():
+                            match_details['StadiumId'] = IdContainer.STADIUM_IDS[stadium]
+                        else:
+                            if stadium is None:
+                                match_details['StadiumId'] = None
+                                
+                            else:
+                                raise Exception(f"{stadium} is new. Insert it itno the")
 
-                            stadiums.append(match_details['Stadium'])
-
+                        match_details_list.append(match_details)
                     else:
                         raise Exception("Match link has not been found")
             
-        return match_details_list
-
-
-
-        
-            
-'''This block is inside [1:] tr blocks. Or simply find all td block containing class tc and href
-<td class="tc">
-<a href="http://www.vilniausfutbolas.lt/varzybos/Sirvintos-VGTU-Vilkai-FK-Tera/26714" class="score lost">2-1</a>
-</td>
-'''
-            
-            
-   
-
-        
-#obj = TeraTeam('http://www.vilniausfutbolas.lt/komanda/FK-Tera/210/20/30')
-
-#print(obj.get_match_data())
+        return match_details_list    

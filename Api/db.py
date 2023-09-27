@@ -4,6 +4,7 @@ import os
 from mysql.connector import connect, Error
 from fastapi import HTTPException
 import uuid
+import json
 
 
 
@@ -31,7 +32,7 @@ class TeraDBManager:
 
 #This file contains code to connect to the DB and maybe some other related stuff. 
     def post_data(self, cursor, insert_query, data, table_name):
-        names_ids = {}
+        ids = {}
 
         cursor.execute(f"SELECT COUNT(*) FROM {table_name}")
         table_row_count = cursor.fetchone()[0]
@@ -41,44 +42,67 @@ class TeraDBManager:
             return
         else:
             row_counter = 1
-            for rows in data:
-
+            for index, rows in enumerate(data, start=1):
+                
                 if table_name == 'TeraPlayers':
                     player_id = str(uuid.uuid4())
                     row_values = (player_id, *tuple(rows.values()), "FK Tera")
-                    names_ids[rows['FullName']] = player_id
+                    ids[rows['FullName']] = player_id
 
                 if table_name == 'ThirdLeagueStandings':
                     team_id = str(uuid.uuid4())[:8]   
                     row_values = (team_id ,*tuple(rows.values()))
-                    names_ids[rows['Komanda']] = team_id
-
+                    ids[rows['Komanda']] = team_id
+                
+                if table_name == 'TeraMatch':
+                    #For this table, data is a list
+                    
+                    match_id = str(uuid.uuid4())[:16]
+                    static_match_details = tuple(rows)[:len(rows)-2]
+                    if isinstance(rows[4], list):
+                        stats = json.dumps({'Stats': rows[4]})
+                    else:
+                        stats = None
+                    stadium_id = tuple(rows)[len(rows)-1]
+                    row_values = (match_id, *static_match_details, stats, stadium_id)
+                    ids[index] = match_id
                 cursor.execute(insert_query, row_values)
                 print(f"Row {row_counter} has been inserted into {table_name}")
                 row_counter += 1
-            return names_ids
-        
-
+            return ids
     
-    def update_data(self, cursor, query, data, table_name, unique_ids):
+    
+    def update_data(self, cursor, update_query, data, table_name, unique_ids):
         
-        row_counter = 0
+        row_counter = 1
         for rows in data: 
-            row_counter += 1
-            row_values = tuple(rows.values())
-            if not query.startswith("UPDATE"):
+            
+            
+            if not update_query.startswith("UPDATE"):
                 print('Wrong SQL query')
                 return
                 
             if table_name == 'TeraPlayers':
                 id = unique_ids[rows['FullName']]
+                row_values = tuple(rows.values())
                 
             if table_name == 'ThirdLeagueStandings':
                 id = unique_ids[rows['Komanda']]
-                
+                row_values = tuple(rows.values())
+            
+            if table_name == 'TeraMatch':
+                id = unique_ids[str(row_counter)]
+                if isinstance(rows[4], list):
+                    stats = json.dumps({'Stats': rows[4]})
+                else:
+                    stats = None
+                rows[4] = stats    
+                row_values = tuple(rows)
+
             params = (*row_values, id)
-            cursor.execute(query, params)
+            cursor.execute(update_query, params)
             print(f"Row {row_counter} has been updated")
+            row_counter += 1
     
 
 
@@ -90,12 +114,13 @@ class DBProcessor:
     def process_data(self, data, query_function, query, table_name, id=None):
         db_connection = self.db_connection_manager.create_db_connection()
         cursor = db_connection.cursor()
-
+        
         try:
             if id is None:
                 output = query_function(cursor, query, data, table_name)
             else:
                 output = query_function(cursor, query, data, table_name, id)
+            
             db_connection.commit()
             return output
         except Exception as e:

@@ -51,12 +51,22 @@ class IdContainer:
                 'Sergejus Ždanovičius': '5aa811e5-a043-4cf5-b033-4efc692b1739', 'Donat Vasiljev': 'ed1ba2a6-994e-4504-81c6-71467a00e849', 
                 'Viačeslav Trušakov': '2a76e225-0df8-4f39-91ce-b72af5982545', 'Artem Shevchenko': '4a969177-05bf-4348-9df5-044756c24b81', 
                 'Maksimilian  Veršinin': '19467182-9d50-4b96-920d-acf8f013df78', 'Aleksandr Fursov': 'cb242cfd-eb88-4ecb-8ef4-7139ee84a1d3', 
-                'Nikita Burlakov': 'a2ab355b-fefe-4022-8801-f9cd1917fa4e'}
+                'Nikita Burlakov': 'a2ab355b-fefe-4022-8801-f9cd1917fa4e'
+                }
 
-    TEAM_IDS = {'FK Medžiai': '0134e67c', 'FK Granitas': 'b98a65af', 'Granitas': 'b98a65af', 
+    TEAM_IDS = {
+                'FK Medžiai': '0134e67c', 'FK Granitas': 'b98a65af', 'Granitas': 'b98a65af', 
                 'Širvintos-VGTU-Vilkai': '8feb1b7d','VGTU-Vilkai': '8feb1b7d' , 'FK Tera': '9530fd95', 
                 'AFK': '28db5534', 'Ataka': '132b0982', 'FC Vova': 'eb875212', 'Vova': 'eb875212',
-                'ESFA-Versmė': 'd68ecc9e', 'FK Navigatoriai': 'e955663a', 'Navigatoriai': 'e955663a', 
+                'ESFA-Versmė': 'd68ecc9e', 'FK Elektrėnų Versmė': 'd68ecc9e', 'FK Navigatoriai': 'e955663a', 'Navigatoriai': 'e955663a', 
                 'VJFK Trakai': 'bcacbf85', 'FK Geležinis Vilkas': 'd4380b48', 'Geležinis Vilkas': 'd4380b48',
-                'FC Vova Juniors': '7faefe00', 'Vova Juniors': '7faefe00'}
+                'FC Vova Juniors': '7faefe00', 'Vova Juniors': '7faefe00'
+               }
+    
+    STADIUM_IDS = {
+                    'Širvintų stadionas': 'c4f769b4-fc8', 'BFA arena': '8a0360fb-21d', 
+                    'Nemenčinė': '9a6c5ffb-780', 'Kariškių stadionas': 'ace9be40-309', 
+                    'Senvagės stadionas': 'ad814714-28c', 'Pilaitės stadionas': 'edbbfae3-496', 
+                    'Trakų naujas': '7a641419-67c'
+                  }
     

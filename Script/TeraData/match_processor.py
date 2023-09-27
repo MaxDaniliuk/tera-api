@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as bs
+import re
 from Schemas.schemas import IdContainer
 
 
@@ -26,11 +27,10 @@ class MatchProcessor:
         
         teams_list = match_info.find_all('h3')
         if teams_list:
+            if teams_list[0].text not in IdContainer.TEAM_IDS.keys() or teams_list[1].text not in IdContainer.TEAM_IDS.keys():
+                raise Exception("One team is not identified")
             match_details['TeamHome'] = IdContainer.TEAM_IDS[teams_list[0].text]
             match_details['TeamAway'] = IdContainer.TEAM_IDS[teams_list[1].text]
-
-            #match_details['TeamHome'] = teams_list[0].text
-            #match_details['TeamAway'] = teams_list[1].text
             
         match_p_tags = match_info.find_all('p')
         if match_p_tags:
@@ -39,24 +39,57 @@ class MatchProcessor:
 
         stadium_section = match_info.find('div', class_='span4 no-space center-teams')
         if stadium_section:
-            stadium = stadium_section.find('a')
-            if stadium.text:
-                match_details['Stadium'] = stadium.text
+            stadium_tag = stadium_section.find('a')
+            if stadium_tag.text:
+                stadium = stadium_tag.text
             else:
-                match_details['Stadium'] = None
+                stadium = None
 
-        return match_details
+        return match_details, stadium
 
     def get_match_stats(self):
+        match_statistics = []
         soup = self.process_match_link()
         statistics_section = soup.find('div', attrs={"id": "tabwidget", "class": "top-margin tabwidget widget tab-container two"})
         goals_section = statistics_section.find('div', class_='goals')
+        
         if goals_section:
-            print('e')
+            match_events = goals_section.find_all('div', class_='statistic-event row-fluid')
+            
+            for event in match_events:
+                match_event = {}
 
-        else: 
-            print('Absent')
-        return
+                if event.find('p').text not in IdContainer.TEAM_IDS.keys():
+                    raise Exception(f"{event.find('p').text} not identified")     
+                match_event['TeamId'] = IdContainer.TEAM_IDS[event.find('p').text]
+                
+                match_event['Minute'] = event.find('div', class_='span2 minute').text
+                a_tag = event.find_all('a')
+                match_event['PlayerName'] = a_tag[0].text.strip()
+
+                main_event = event.find('img')['src']
+                match = re.search(r'/([^/]+)\.png', main_event)
+                if match:
+                    fragment = match.group(1)
+                    match_event['Event'] = fragment
+                else:
+                    print("No match event found")
+
+                if len(a_tag) > 1:
+                    match_event['AssistedBy'] = a_tag[1].text.strip()
+                
+
+
+                match_statistics.append(match_event)
+                 
+            
+
+        else:
+            #match_event = {} 
+            #match_event["TBA"] = None
+            match_statistics = None
+            
+        return match_statistics
 
 
 

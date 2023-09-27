@@ -49,3 +49,32 @@ class TeraTeamSQLQueries:
     
     UPDATE_PLAYERS_DATA = "UPDATE TeraPlayers SET FullName = %s, DateOfBirth = %s, Position = %s, Goals = %s, Assists = %s, GC = %s, RC = %s WHERE PlayerId = %s"
 
+class TeraMatchSQLQueries:
+    CREATE_TERA_MATCH = '''
+        CREATE TABLE TeraMatch ( 
+            MatchId CHAR(16) NOT NULL, 
+            TeamHome VARCHAR(8) NOT NULL, 
+            TeamAway VARCHAR(8) NOT NULL, 
+            League VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+            DateTime DATETIME, 
+            Stats JSON, 
+            StadiumId VARCHAR(12),  
+            PRIMARY KEY (MatchId)
+            );
+        '''
+
+    INSERT_TERA_MATCH = "INSERT INTO TeraMatch (MatchId, TeamHome, TeamAway, League, DateTime, Stats, StadiumId) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+
+    UPDATE_TERA_MATCH = "UPDATE TeraMatch SET TeamHome = %s, TeamAway = %s, League = %s, DateTime = %s, Stats = %s, StadiumId = %s WHERE MatchId = %s"
+
+
+class Stadiums:
+    #Incomplete query
+    CREATE_STADIUMS = '''
+            StadiumId CHAR(12) NOT NULL, 
+            StadiumName VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+            Lat DOUBLE,
+            Long DOUBLE,
+            PRIMARY KEY (StadiumId) 
+'''
+    INSERT_STADIUMS = "INSERT INTO Stadiums (StadiumId, StadiumName, Lat, Long) VALUES (%s, %s, %s, %s)"

@@ -2,6 +2,7 @@
 class DBSchema:
 
     THIRDLEAGUESTANDINGS_SCHEMA = [
+                "TeamId CHAR(8) NOT NULL",
                 "Place int",
                 "Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci PRIMARY KEY",
                 "Logo VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci",
@@ -12,11 +13,12 @@ class DBSchema:
                 "GoalsFor int",
                 "GoalsAgainst int",
                 "GaolDifference VARCHAR(5)",
-                "Points int"
+                "Points int",
+                "PRIMARY KEY (TeamId)"
                 ]
 
     TERAPLAYERS_SCHEMA =[
-        "PlayerId"
+        "PlayerId CHAR(36) NOT NULL"
         "FullName VARCHAR(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", 
         "DateOfBirth VARCHAR(30)", 
         "Position VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", 
@@ -26,6 +28,17 @@ class DBSchema:
         "RC INT",
         "Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", 
         "PRIMARY KEY (PlayerID)" 
+    ]
+
+    TERA_MATCH_DETAILS = [
+            "MatchId CHAR(16) NOT NULL", 
+            "TeamHome VARCHAR(8) NOT NULL", 
+            "TeamAway VARCHAR(8) NOT NULL", 
+            "League VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci", 
+            "DateTime DATETIME", 
+            "Stats JSON", 
+            "StadiumId VARCHAR(12)",  
+            "PRIMARY KEY (MatchId)"
     ]
 
 class IdContainer:
@@ -53,10 +66,28 @@ class IdContainer:
                 'Maksimilian  Veršinin': '19467182-9d50-4b96-920d-acf8f013df78', 'Aleksandr Fursov': 'cb242cfd-eb88-4ecb-8ef4-7139ee84a1d3', 
                 'Nikita Burlakov': 'a2ab355b-fefe-4022-8801-f9cd1917fa4e'}
 
-    TEAM_IDS = {'FK Medžiai': '0134e67c', 'FK Granitas': 'b98a65af', 'Granitas': 'b98a65af', 
+    TEAM_IDS = {
+                'FK Medžiai': '0134e67c', 'FK Granitas': 'b98a65af', 'Granitas': 'b98a65af', 
                 'Širvintos-VGTU-Vilkai': '8feb1b7d','VGTU-Vilkai': '8feb1b7d' , 'FK Tera': '9530fd95', 
                 'AFK': '28db5534', 'Ataka': '132b0982', 'FC Vova': 'eb875212', 'Vova': 'eb875212',
-                'ESFA-Versmė': 'd68ecc9e', 'FK Navigatoriai': 'e955663a', 'Navigatoriai': 'e955663a', 
+                'ESFA-Versmė': 'd68ecc9e', 'FK Elektrėnų Versmė': 'd68ecc9e','FK Navigatoriai': 'e955663a', 'Navigatoriai': 'e955663a', 
                 'VJFK Trakai': 'bcacbf85', 'FK Geležinis Vilkas': 'd4380b48', 'Geležinis Vilkas': 'd4380b48',
-                'FC Vova Juniors': '7faefe00', 'Vova Juniors': '7faefe00'}
+                'FC Vova Juniors': '7faefe00', 'Vova Juniors': '7faefe00'
+                }
+    
+    STADIUM_IDS = {
+                'Širvintų stadionas': 'c4f769b4-fc8', 'BFA arena': '8a0360fb-21d', 
+                'Nemenčinė': '9a6c5ffb-780', 'Kariškių stadionas': 'ace9be40-309', 
+                'Senvagės stadionas': 'ad814714-28c', 'Pilaitės stadionas': 'edbbfae3-496', 
+                'Trakų naujas': '7a641419-67c'
+                }
+    
+    Match_IDs = {
+                '1': '6ebf2cc1-1912-49', '2': 'f35c66d4-3965-41', '3': 'e6ea0e61-6c83-41', '4': '4aed0cc4-f368-4f', 
+                '5': '8a297683-c6d4-47', '6': '64a5e248-da5e-4d', '7': '24f8dcb6-903c-4c', '8': 'b9115000-ce1c-40', 
+                '9': 'eec614bc-9859-40', '10': '0c29e94c-40c8-4e', '11': 'f28a6928-229e-47', '12': 'ce55f015-eba8-46', 
+                '13': '8cd3e647-d2bc-4e', '14': '7e1578b7-896f-4d', '15': '079ac5b8-1dde-44', '16': '7616b149-9e51-4f', 
+                '17': '2d15a28f-d5e1-4d', '18': '4653fdbe-d9a5-45', '19': 'fd9394a1-fc17-41', '20': 'f3293933-28b5-45', 
+                '21': '3b0afff4-9150-45', '22': 'c982d441-3a11-42', '23': 'd6c98c20-efdd-44'
+               }
     
