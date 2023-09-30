@@ -3,6 +3,7 @@ from Queries.sql_queries import StandingsSQLQueries, TeraTeamSQLQueries, TeraMat
 from Schema.schema import IdContainer
 from db import DBProcessor
 from Models.models import ThirdLeagueStandings, TeraPlayers, TeraMatch
+#from . import models, schemas
 
 
 app = FastAPI()
@@ -36,7 +37,6 @@ async def process_posted_data(data: ThirdLeagueStandings):
         teams_ids = None
         return 
     
-
 @app.put("/db/thirdleaguestandings", status_code=201)
 async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
@@ -86,6 +86,7 @@ async def process_players(players_data: TeraPlayers):
     else: 
         players_ids = None
         return 
+
 
 @app.post("/db/post/teramatch", status_code=201)
 async def process_tera_matches(tera_matches: TeraMatch):
@@ -145,3 +146,7 @@ async def update_tera_match(tera_matches: TeraMatch):
         tera_match_ids
         )  
     
+
+@app.get("/data/{table_name}")
+async def get_data(table_name: str):
+    pass
