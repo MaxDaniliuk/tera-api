@@ -1,4 +1,5 @@
 from pydantic import BaseModel
+from enum import Enum
 from typing import Any
 
 
@@ -21,3 +22,12 @@ class TeraMatchData(BaseModel):
 class TeraMatch(BaseModel):
    matchStats: list[TeraMatchData]
     
+class Position(str, Enum):
+    goalkeepers = "goalkeepers"
+    goalkeeper = "goalkeeper"
+    defenders = "defenders"
+    defender = "defender"
+    midfielders = "midfielders"
+    midfielder = "midfielder"
+    forwards = "forwards"
+    forward = "forward"

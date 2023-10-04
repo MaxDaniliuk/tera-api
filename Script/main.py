@@ -7,6 +7,7 @@ import requests
 
 
 def main(): 
+    
     extracted_table = DataExtractor('http://www.vilniausfutbolas.lt/lyga/III-Lyga/20')
     standings_table = extracted_table.get_table()
     standings_data = StandingsData(standings_table)
@@ -40,9 +41,9 @@ def main():
     if third_league_standings == 'put':
         response = requests.put('http://127.0.0.1:8000/db/thirdleaguestandings', json=data)
         if response.status_code == 201:
-            print('ThirdLeagueStandings Data successfully posted to the API.')
+            print('ThirdLeagueStandings Data has been successfully sent to the API.')
         else:
-            print('Failed to post data:', response.status_code)
+            print('Failed to sent data:', response.status_code)
             print(response.content)
             print(response.json())
 
@@ -78,7 +79,7 @@ def main():
         if put_response.status_code == 201:
             print('Team Data has been successfully sent to the API.')
         else:
-            print('Failed to post team data:', put_response.status_code)
+            print('Failed to sent team data:', put_response.status_code)
             print(put_response.content)
             print(put_response.json())
     
@@ -107,9 +108,12 @@ def main():
         if put_response_match.status_code == 201:
             print('Tera Team match data has been successfully sent to the API.')
         else:
-            print('Failed to post Tera match data:', put_response_match.status_code)
+            print('Failed to sent Tera match data:', put_response_match.status_code)
             print(put_response_match.content)
             #print(put_response_match.json())
+
+    #response = requests.get('http://127.0.0.1:8000/next-match/')
+    #print(response.content)
 
 if __name__ == "__main__":
     main()

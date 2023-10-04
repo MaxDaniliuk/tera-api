@@ -5,7 +5,9 @@ from mysql.connector import connect, Error
 from fastapi import HTTPException
 import uuid
 import json
-
+from Schema.schema import IdContainer
+import datetime
+from Queries.sql_queries import Stadiums
 
 
 class TeraDBManager:
@@ -28,7 +30,6 @@ class TeraDBManager:
             print('Connection to DB failed.', e)
             return None
         
-
 
 #This file contains code to connect to the DB and maybe some other related stuff. 
     def post_data(self, cursor, insert_query, data, table_name):
@@ -77,7 +78,6 @@ class TeraDBManager:
         row_counter = 1
         for rows in data: 
             
-            
             if not update_query.startswith("UPDATE"):
                 print('Wrong SQL query')
                 return
@@ -103,8 +103,116 @@ class TeraDBManager:
             cursor.execute(update_query, params)
             print(f"Row {row_counter} has been updated")
             row_counter += 1
-    
 
+    
+    def get_third_league_standings(self, cursor, select_query):
+        
+        cursor.execute(select_query)
+        retrieved_rows = cursor.fetchall()
+        data_names = ['Place', 'Team', 'GamesPlayed', 'Won', 'Drawn', 'Lost', 'GoalsFor', 'GoalsAgainst', 'GoalDifference', 'Points']
+        rows = []
+        for row in retrieved_rows:
+            values_list = list(row)
+            processed_row = dict(zip(data_names, values_list))
+            rows.append(processed_row)
+        return rows
+    
+    
+    def get_players_by_position(self, cursor, select_query, param):
+
+        cursor.execute(select_query, param)
+        retrieved_data = cursor.fetchall()
+        data_names = ['FullName', 'DateOfBirth', 'Position', 'Goals', 'Assists', 'GC', 'RC']
+        rows = [] 
+        for row in retrieved_data:
+            row = list(row)
+            date_element  = row[1].split('[')[0].strip()
+            date_obj = datetime.datetime.strptime(date_element, "%Y-%m-%d")
+            row[1] = date_obj.strftime("%Y-%m-%d")
+            processed_row = dict(zip(data_names, row))
+            rows.append(processed_row)
+        return rows
+
+    
+    def get_match(self, cursor, select_query, current_time, number=None):
+        if number is None or number <= 0:
+            number = 1
+        params = (current_time, number)
+        cursor.execute(select_query, params)
+        retrieved_data = cursor.fetchall()
+        
+        formatted_data = []
+        for row in retrieved_data:
+            new_dict = {}
+            
+            for index, value in enumerate(row, start=1):
+                if index == 1:
+                    value_processor = MatchDataStringProcessor(value)
+                    processed_value = value_processor.get_processed_value()
+                    new_dict['TeamHome'] = processed_value
+                    
+                elif index == 2:
+                    value_processor = MatchDataStringProcessor(value)
+                    processed_value = value_processor.get_processed_value()
+                    new_dict['TeamAway'] = processed_value
+                    
+                elif index == 3:
+                    new_dict['League'] = value
+                    
+                elif index == 4:
+                    new_dict['DateTime'] = value.strftime("%Y-%m-%d %H:%M")
+                    
+                elif index == 5:
+                    if value is None:
+                        new_dict['Stats'] = None
+                    else:
+                        list_of_values = json.loads(value)
+                        match_events = []
+                        for dict_element in list_of_values['Stats']:
+                            stats = {}
+                            value_processor = MatchDataStringProcessor(dict_element['TeamId'])
+                            stats['Team'] = value_processor.get_processed_value()    
+                            stats['Minute'] = dict_element['Minute']
+                            stats['Event'] = dict_element['Event']
+                            stats['PlayerName'] = dict_element['PlayerName']
+                            if 'AssistedBy' in dict_element:
+                                stats['AssistedBy'] = dict_element['AssistedBy']
+                            match_events.append(stats)
+                        new_dict['Stats'] = match_events
+                elif index == 6:
+                    if value is None:
+                        new_dict['StadiumData'] = None
+                    else:
+                        param = (value,)
+                        cursor.execute(Stadiums.SELECT_STADIUM, param)
+                        stadium_data = cursor.fetchall()
+                        stadium_dict = {}
+                        for data in stadium_data:
+                            stadium_dict['Stadium'] = data[0]
+                            stadium_dict['Lat'] = data[1]
+                            stadium_dict['Long'] = data[2]
+                        new_dict['StadiumData'] = stadium_dict 
+                    
+            formatted_data.append(new_dict)
+        return formatted_data
+
+
+class MatchDataStringProcessor:
+
+    def __init__(self, value):
+        self.value = value
+
+    def get_processed_value(self):
+        value = self.value
+
+        if isinstance(value, str): 
+            if value in IdContainer.TEAM_IDS.values():
+                for key, val in IdContainer.TEAM_IDS.items():
+                    if val == value:
+                        return key
+            else: 
+                raise{f"TeamId: {value} has not been identified"}
+        
 
 class DBProcessor:
 
@@ -128,4 +236,17 @@ class DBProcessor:
         finally:
             cursor.close()
             db_connection.close()
-            
+    
+    def retrieve_data(self, query_function, select_query, *args):
+        db_connection = self.db_connection_manager.create_db_connection()
+        cursor = db_connection.cursor()
+
+        try:
+            output = query_function(cursor, select_query, *args)
+            db_connection.commit()
+            return output
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            cursor.close()
+            db_connection.close()

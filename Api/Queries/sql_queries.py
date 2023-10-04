@@ -24,7 +24,7 @@ class StandingsSQLQueries:
 
     UPDATE_STANDINGS_DATA = 'UPDATE ThirdLeagueStandings SET Place = %s, Team = %s, Logo = %s, GamesPlayed = %s, Won = %s, Drawn = %s, Lost = %s, GoalsFor = %s, GoalsAgainst = %s, GoalDifference = %s, Points = %s WHERE TeamId = %s'
 
-    DELETE_STANDINGS_DATA = ''
+    SELECT_THIRD_LEAGUE_STANDINGS = "SELECT Place, Team, GamesPlayed, Won, Drawn, Lost, GoalsFor, GoalsAgainst, GoalDifference, Points FROM ThirdLeagueStandings ORDER BY Place" 
 
 
 class TeraTeamSQLQueries:
@@ -46,8 +46,10 @@ class TeraTeamSQLQueries:
 
     INSERT_PLAYERS_DATA = "INSERT INTO TeraPlayers (PlayerID, FullName, DateOfBirth, Position, Goals, Assists, GC, RC, TeamId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)"
 
-    
     UPDATE_PLAYERS_DATA = "UPDATE TeraPlayers SET FullName = %s, DateOfBirth = %s, Position = %s, Goals = %s, Assists = %s, GC = %s, RC = %s WHERE PlayerId = %s"
+
+    SELECT_PLAYERS_BY_POSTION = "SELECT FullName, DateOfBirth, Position, Goals, Assists, GC, RC FROM TeraPlayers WHERE Position = %s ORDER BY Goals DESC"
+
 
 class TeraMatchSQLQueries:
     CREATE_TERA_MATCH = '''
@@ -67,6 +69,10 @@ class TeraMatchSQLQueries:
 
     UPDATE_TERA_MATCH = "UPDATE TeraMatch SET TeamHome = %s, TeamAway = %s, League = %s, DateTime = %s, Stats = %s, StadiumId = %s WHERE MatchId = %s"
 
+    SELECT_PREVIOUS_MATCH = "SELECT TeamHome, TeamAway, League, DateTime, CAST(Stats AS JSON), StadiumId FROM TeraMatch WHERE DateTime < %s ORDER BY DateTime DESC LIMIT %s" #s is current DateTime
+
+    SELECT_NEXT_MATCH = "SELECT TeamHome, TeamAway, League, DateTime, CAST(Stats AS JSON), StadiumId FROM TeraMatch WHERE DateTime > %s ORDER BY DateTime LIMIT %s" #s is current DateTime
+                                                            
 
 class Stadiums:
     #Incomplete query
@@ -78,3 +84,5 @@ class Stadiums:
             PRIMARY KEY (StadiumId) 
 '''
     INSERT_STADIUMS = "INSERT INTO Stadiums (StadiumId, StadiumName, Lat, Long) VALUES (%s, %s, %s, %s)"
+
+    SELECT_STADIUM = "SELECT StadiumName, Lat, Long FROM Stadiums WHERE StadiumId = %s"
