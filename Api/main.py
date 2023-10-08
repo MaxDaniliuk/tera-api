@@ -1,4 +1,4 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI
 from Queries.sql_queries import StandingsSQLQueries, TeraTeamSQLQueries, TeraMatchSQLQueries
 from Schema.schema import IdContainer
 from db import DBProcessor
@@ -11,13 +11,8 @@ app = FastAPI()
 
 db_processor = DBProcessor()
 
-@app.get("/test")
-async def root():
-    return {"message": "Get's working"}
 
-#ROUTES... 
-
-@app.post("/db/thirdleaguestandings", status_code=201)
+@app.post("/db/post/thirdleaguestandings", status_code=201)
 async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
     insert_query = StandingsSQLQueries.INSERT_STANDINGS_DATA
@@ -38,7 +33,7 @@ async def process_posted_data(data: ThirdLeagueStandings):
         teams_ids = None
         return 
     
-@app.put("/db/thirdleaguestandings", status_code=201)
+@app.put("/db/put/thirdleaguestandings", status_code=201)
 async def process_posted_data(data: ThirdLeagueStandings):
     structred_data = data.standings
     update_query = StandingsSQLQueries.UPDATE_STANDINGS_DATA

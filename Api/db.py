@@ -7,7 +7,7 @@ import uuid
 import json
 from Schema.schema import IdContainer
 import datetime
-from Queries.sql_queries import Stadiums
+from Queries.sql_queries import Stadiums, TeraTeamSQLQueries
 
 
 class TeraDBManager:
@@ -47,7 +47,7 @@ class TeraDBManager:
                 
                 if table_name == 'TeraPlayers':
                     player_id = str(uuid.uuid4())
-                    row_values = (player_id, *tuple(rows.values()), "FK Tera")
+                    row_values = (player_id, *tuple(rows.values()), "9530fd95")
                     ids[rows['FullName']] = player_id
 
                 if table_name == 'ThirdLeagueStandings':
@@ -74,17 +74,32 @@ class TeraDBManager:
     
     
     def update_data(self, cursor, update_query, data, table_name, unique_ids):
-        
+        if table_name == 'TeraPlayers':
+            cursor.execute(f"SELECT FullName FROM {table_name}")
+            names = cursor.fetchall()
+            
         row_counter = 1
         for rows in data: 
-            
             if not update_query.startswith("UPDATE"):
                 print('Wrong SQL query')
                 return
                 
             if table_name == 'TeraPlayers':
-                id = unique_ids[rows['FullName']]
-                row_values = tuple(rows.values())
+                full_name = rows['FullName']
+                player_present = next((name for name in names if name[0] == full_name), None)
+                
+                if player_present:
+                    id = unique_ids[rows['FullName']]
+                    row_values = tuple(rows.values())
+                    
+                else:
+                    id = str(uuid.uuid4())
+                    IdContainer.PLAYERS_IDS[rows['FullName']] = id
+                    row_values = (id, *tuple(rows.values()), "9530fd95")
+                    cursor.execute(TeraTeamSQLQueries.INSERT_PLAYERS_DATA, row_values)
+                    print(f"New player {rows['FullName']} has been added")
+                    row_counter += 1
+                    continue
                 
             if table_name == 'ThirdLeagueStandings':
                 id = unique_ids[rows['Komanda']]

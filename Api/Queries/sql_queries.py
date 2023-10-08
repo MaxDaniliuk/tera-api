@@ -39,7 +39,7 @@ class TeraTeamSQLQueries:
             Assists INT, 
             GC INT, 
             RC INT, 
-            Team VARCHAR(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
+            TeamId CHAR(8) NOT NULL, 
             PRIMARY KEY (PlayerId) 
             );
         '''
