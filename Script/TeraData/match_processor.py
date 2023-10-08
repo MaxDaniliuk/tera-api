@@ -40,10 +40,16 @@ class MatchProcessor:
         stadium_section = match_info.find('div', class_='span4 no-space center-teams')
         if stadium_section:
             stadium_tag = stadium_section.find('a')
-            if stadium_tag.text:
-                stadium = stadium_tag.text
+            if stadium_tag:
+                if stadium_tag.text:
+                    stadium = stadium_tag.text
+                else:
+                    stadium = None
+            score_tag = stadium_section.find('h1')
+            if score_tag:
+                match_details['Score'] = score_tag.text
             else:
-                stadium = None
+                match_details['Score'] = None
 
         return match_details, stadium
 

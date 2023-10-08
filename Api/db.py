@@ -61,7 +61,7 @@ class TeraDBManager:
                     match_id = str(uuid.uuid4())[:16]
                     static_match_details = tuple(rows)[:len(rows)-2]
                     if isinstance(rows[4], list):
-                        stats = json.dumps({'Stats': rows[4]})
+                        stats = json.dumps({'Stats': rows[5]})
                     else:
                         stats = None
                     stadium_id = tuple(rows)[len(rows)-1]
@@ -107,11 +107,11 @@ class TeraDBManager:
             
             if table_name == 'TeraMatch':
                 id = unique_ids[str(row_counter)]
-                if isinstance(rows[4], list):
-                    stats = json.dumps({'Stats': rows[4]})
+                if isinstance(rows[5], list):
+                    stats = json.dumps({'Stats': rows[5]})
                 else:
                     stats = None
-                rows[4] = stats    
+                rows[5] = stats    
                 row_values = tuple(rows)
 
             params = (*row_values, id)
@@ -176,8 +176,14 @@ class TeraDBManager:
                     
                 elif index == 4:
                     new_dict['DateTime'] = value.strftime("%Y-%m-%d %H:%M")
-                    
+                
                 elif index == 5:
+                    if value is None:
+                        new_dict['Score'] = None
+                    else:    
+                        new_dict['Score'] = value
+
+                elif index == 6:
                     if value is None:
                         new_dict['Stats'] = None
                     else:
@@ -194,7 +200,7 @@ class TeraDBManager:
                                 stats['AssistedBy'] = dict_element['AssistedBy']
                             match_events.append(stats)
                         new_dict['Stats'] = match_events
-                elif index == 6:
+                elif index == 7:
                     if value is None:
                         new_dict['StadiumData'] = None
                     else:

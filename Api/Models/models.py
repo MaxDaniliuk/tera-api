@@ -16,6 +16,7 @@ class TeraMatchData(BaseModel):
     TeamAway: str
     League: str
     DateTime: str
+    Score: str | None
     Stats: list[dict[str, Any]] | None
     StadiumId: str | None
 

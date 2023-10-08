@@ -76,7 +76,7 @@ class TeraTeam:
                                 match_details['StadiumId'] = None
                                 
                             else:
-                                raise Exception(f"{stadium} is new. Insert it itno the")
+                                raise Exception(f"{stadium} is new. Insert it itno the StadiumsId list")
 
                         match_details_list.append(match_details)
                     else:

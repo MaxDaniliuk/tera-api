@@ -58,20 +58,21 @@ class TeraMatchSQLQueries:
             TeamHome VARCHAR(8) NOT NULL, 
             TeamAway VARCHAR(8) NOT NULL, 
             League VARCHAR(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci, 
-            DateTime DATETIME, 
+            DateTime DATETIME,
+            Score VARCHAR(10),
             Stats JSON, 
             StadiumId VARCHAR(12),  
             PRIMARY KEY (MatchId)
             );
         '''
 
-    INSERT_TERA_MATCH = "INSERT INTO TeraMatch (MatchId, TeamHome, TeamAway, League, DateTime, Stats, StadiumId) VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    INSERT_TERA_MATCH = "INSERT INTO TeraMatch (MatchId, TeamHome, TeamAway, League, DateTime, Score, Stats, StadiumId) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)"
 
-    UPDATE_TERA_MATCH = "UPDATE TeraMatch SET TeamHome = %s, TeamAway = %s, League = %s, DateTime = %s, Stats = %s, StadiumId = %s WHERE MatchId = %s"
+    UPDATE_TERA_MATCH = "UPDATE TeraMatch SET TeamHome = %s, TeamAway = %s, League = %s, DateTime = %s, Score = %s, Stats = %s, StadiumId = %s WHERE MatchId = %s"
 
-    SELECT_PREVIOUS_MATCH = "SELECT TeamHome, TeamAway, League, DateTime, CAST(Stats AS JSON), StadiumId FROM TeraMatch WHERE DateTime < %s ORDER BY DateTime DESC LIMIT %s" #s is current DateTime
+    SELECT_PREVIOUS_MATCH = "SELECT TeamHome, TeamAway, League, DateTime, Score, CAST(Stats AS JSON), StadiumId FROM TeraMatch WHERE DateTime < %s ORDER BY DateTime DESC LIMIT %s" #s is current DateTime
 
-    SELECT_NEXT_MATCH = "SELECT TeamHome, TeamAway, League, DateTime, CAST(Stats AS JSON), StadiumId FROM TeraMatch WHERE DateTime > %s ORDER BY DateTime LIMIT %s" #s is current DateTime
+    SELECT_NEXT_MATCH = "SELECT TeamHome, TeamAway, League, DateTime, Score, CAST(Stats AS JSON), StadiumId FROM TeraMatch WHERE DateTime > %s ORDER BY DateTime LIMIT %s" #s is current DateTime
                                                             
 
 class Stadiums:
