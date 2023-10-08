@@ -17,21 +17,24 @@ def main():
     extracted_table = DataExtractor('http://www.vilniausfutbolas.lt/lyga/III-Lyga/20')
     standings_table = extracted_table.get_table()
     standings_data = StandingsData(standings_table)
-    post_data = {'standings': standings_data.get_data()}
-    put_data = {'standings': standings_data.get_data()}
-    
+    table_data_third_league = {'standings': standings_data.get_data()}
+
+    #If I do it like this data = {'standings': standings_data.get_data()}
+    # And then pass data to the post and put requests it fucks up 
+
+
     #Final task
     #
     #images_data = ImagesData(standings_table)
     #images_data.save_images()
 
 
-    post_response_third_league = requests.post('http://0.0.0.0:5973/db/post/thirdleaguestandings', json=post_data)
+    post_response_third_league = requests.post('http://0.0.0.0:5973/db/post/thirdleaguestandings', json=table_data_third_league)
     if post_response_third_league.status_code == 201:
-        data = post_response_third_league.json()
-        if isinstance(data, dict):  
-            message = data.get("Message")
-            teams_ids = data.get("TeamsIds")
+        third_league_data = post_response_third_league.json()
+        if isinstance(third_league_data, dict):  
+            message = third_league_data.get("Message")
+            teams_ids = third_league_data.get("TeamsIds")
 
             print('ThirdLeagueStandings Data has been successfully sent to the API.')
             print('Message:', message)
@@ -43,7 +46,7 @@ def main():
         #print(post_response_third_league.json())'''
 
     
-    put_response_third_league = requests.put('http://0.0.0.0:5973/db/put/thirdleaguestandings', json=put_data)
+    put_response_third_league = requests.put('http://0.0.0.0:5973/db/put/thirdleaguestandings', json=table_data_third_league)
     if put_response_third_league.status_code == 201:
         print('ThirdLeagueStandings Data has been successfully sent to the API.')
     else:
@@ -64,10 +67,10 @@ def main():
     
     post_response_players = requests.post('http://0.0.0.0:5973/db/post/teraplayers', json=players_stats)
     if post_response_players.status_code == 201:
-        data = post_response_players.json()
-        if isinstance(data, dict):  
-            message = data.get("Message")
-            players_ids = data.get("PlayersIds")
+        data_players = post_response_players.json()
+        if isinstance(data_players, dict):  
+            message = data_players.get("Message")
+            players_ids = data_players.get("PlayersIds")
 
             print('Tera Team data has been successfully sent to the API.')
             print('Message:', message)
@@ -89,10 +92,10 @@ def main():
 
     post_response_match = requests.post('http://0.0.0.0:5973/db/post/teramatch', json=match_data)
     if post_response_match.status_code == 201:
-        data = post_response_match.json()
-        if isinstance(data, dict):  
-            message = data.get("Message")
-            matches_ids = data.get("MatchIds")
+        data_match = post_response_match.json()
+        if isinstance(data_match, dict):  
+            message = data_match.get("Message")
+            matches_ids = data_match.get("MatchIds")
 
             print('Tera Team match data has been successfully sent to the API.')
             print('Message:', message)
